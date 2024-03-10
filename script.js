@@ -10,5 +10,5 @@ function start(){
     const model=new GameModel();
     const view=new GameView(model);
     const controller=new Gamecontroller(model, view);
-   
+//    controller.gameTick();
 }

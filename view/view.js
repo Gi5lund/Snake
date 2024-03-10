@@ -13,16 +13,16 @@ export class GameView {
             for (let j = 0; j < this.model.gridSize; j++) {
                 let cell = document.createElement("div");
                 cell.classList.add("cell");
-                cell.id = i + "-" + j;
+               
                 this.grid.appendChild(cell);
             }
             
         }
-        this.grid.style.gridTemplateColumns = `repeat(${this.model.gridSize}, 4px)`;
+        this.grid.style.gridTemplateColumns = `repeat(${this.model.gridSize}, 1fr)`;
     }
     setupEventlisteners(){
         document.addEventListener("keydown",(event)=>{
-            const keydownEvent=new CustomEvent("keypressed",{detail:{key:event.key}});
+            const keydownEvent=new CustomEvent("keyPressed",{detail:{key:event.key}});
             document.dispatchEvent(keydownEvent);
         });
          document.addEventListener("keyup",(event)=>{
@@ -52,4 +52,14 @@ export class GameView {
          }
        }
     } 
+    updateScore(){
+        this.score.innerHTML=this.model.getScore();
+    }
+    updateCell(row,col){
+        const cells = document.querySelectorAll("#grid .cell");
+        const index = row * this.model.gridSize + col;
+        cells[index].classList.add("player");
+        cells[index].classList.remove("goal");
+
+    }
 }

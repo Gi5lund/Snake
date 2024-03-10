@@ -10,8 +10,9 @@ class Node{
 
  class SnakeQueue {
     constructor() {
-        this.front=null;
-        this.rear = null;
+        this.front=new Node();
+        this.rear = new Node();
+        // this.value=1;
         this.length = 0;
     }
     isEmpty(){
@@ -53,7 +54,7 @@ class Node{
     print() {
      let current = this.front;
      while(current) {
-          console.log(current.data);
+          console.log("Print snake: ",current.data);
           current = current.next;
      }
     }
@@ -64,6 +65,12 @@ class Node{
 
 export class GameModel{
     constructor(){
+        this.controls={
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+        }
         this.direction="right";
         this.snake=new SnakeQueue();
         this.food=[];
@@ -71,6 +78,10 @@ export class GameModel{
         this.gameOver=false;
         this.gridSize=20;
         this.grid = this.createGrid();
+        // console.log("grid: ",this.grid);
+        this.initSnake();
+        console.log("snake: ",this.snake);
+        this.addFood();
       
     }
     createGrid(){
@@ -87,53 +98,51 @@ export class GameModel{
     getScore(){
         return this.score;
     }
+    incrementScore(){
+        this.score++;
+    }
+    initSnake(){
+         const startPos=[this.gridSize/2,this.gridSize/2]
+                
+        this.snake.enqueue([startPos]);
+    }
     setDirection(controls){
-        if(controls.left){
+        if(this.controls.left){
             this.direction="left";
         }else if (controls.up){
             this.direction="up";  
-        } else if (controls.right){ 
+        } else if (this.controls.right){ 
             this.direction="right";
-        } else if (controls.down){    
+        } else if (this.controls.down){    
             this.direction="down";
         }
-        
+        // this.moveSnake(this.direction);
     }
-    moveSnake(){
-        let newHead;
-        let head=this.snake.peek();
-        
-        if (this.direction==="right"){
-            newHead=[head[0],head[1]+1];
-            
-        }else if(this.direction==="left"){
-            newHead=[head[0],head[1]-1];
-        }else if(this.direction== "up"){
-            newHead=[head[0]-1,head[1]];
-        } else {
-            newHead=[head[0]+1,head[1]];
-        }
-        this.snake.enqueue(newHead);
-         console.log("New Snake")
-    }
+    
     addFood(){
         let x=Math.floor(Math.random()*this.gridSize);
         let y=Math.floor(Math.random()*this.gridSize);
         this.food.push([x,y]);
     }
-    writeToCell(row,col,value){
-        this.grid[row][col]=value;
+    writeToCell(row,col,value){ 
+        if(row!==undefined&&col!==undefined&&value!==undefined){    
+         console.log("new writetocell",row,col, value)       
+       this.grid[row][col]= value;     
+    }else{
+        console.log("row, col, value: ",row, col, value);
+    
     }
+}
     readFromCell(row,col){
         return this.grid[row][col];
     }
     growSnake(){
-        let tail=this.snake.peek();
+        let tail=this.snake.rear.data;
         this.snake.enqueue(tail);
     }
     checkCollisionWithSelf(){ 
         let head=this.snake.peek();
-        let current=this.snake.front;
+        let current=this.snake.rear;
         while(current.next){
             if(current.data[0]===head[0]&&current.data[1]===head[1]){
                 
