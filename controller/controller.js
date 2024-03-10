@@ -16,7 +16,7 @@ export class Gamecontroller {
     setupEventlisteners() {
         document.addEventListener("keyPressed", (event) => {
         const key=event.detail.key;
-        console.log("keypressed: ",key); 
+        // console.log("keypressed: ",key); 
         this.setControls(key);   
         });
         document.addEventListener("keyReleased", (event) => {
@@ -40,7 +40,7 @@ export class Gamecontroller {
                 this.model.controls.down = true;
                 break;
         }
-        console.log("setcontrols: ",this.model.controls);
+        // console.log("setcontrols: ",this.model.controls);
         this.model.setDirection(this.model.controls);
     }
    
@@ -68,9 +68,9 @@ export class Gamecontroller {
         //prepare next game tick
          setTimeout(this.gameTick.bind(this), 500);
         //remove snake from model.grid
-        console.log("remove snake");
+        // console.log("remove snake");
         let currenthead = this.model.snake.front;
-        console.log("currenthead.front.data[0]: ",currenthead.data[0]);
+        // console.log("currenthead.front.data[0]: ",currenthead.data[0]);
         // console.log("curent.front.next: ",current.front.next);
         // console.log("current length: ",current.length)
         while(currenthead) {
@@ -82,13 +82,13 @@ export class Gamecontroller {
     console.log("set directions");
         this.model.setDirection(this.getControls());
         const newdirection=this.model.direction;
-        console.log("new direction",this.model.direction);
-        console.log("move snake");
+        // console.log("new direction",this.model.direction);
+        // console.log("move snake");
         const newHead={
             row:this.model.snake.rear.data[0][0],
             col:this.model.snake.rear.data[0][1]
         };
-        console.log("switch directions");
+        // console.log("switch directions");
         switch(newdirection) {
             case "left":
                 newHead.col--;
@@ -116,8 +116,16 @@ export class Gamecontroller {
         }
         this.model.snake.enqueue([[newHead.row, newHead.col]]);
        
-        console.log("check collision with food");
-        console.log("data: ",this.model.grid[newHead.row][newHead.col])
+        console.log("check collision with self and food");
+        // console.log("data: ",this.model.grid[newHead.row][newHead.col])
+        // console.log("newHead object: ",[newHead.row, newHead.col]);
+        console.log("newhead value: ",this.model.readFromCell(newHead.row,newHead.col));
+        if(this.model.snake.iterateSnake([[newHead.row, newHead.col]])){
+            this.model.gameOver=true;
+            console.log("game over");
+            alert("Game Over")
+            exit;
+        }else
        if(this.model.grid[newHead.row][newHead.col]===2){
             this.model.food.pop();
             this.model.incrementScore();
@@ -125,40 +133,17 @@ export class Gamecontroller {
             this.view.updateCell(newHead.row, newHead.col);
             this.model.growSnake();
             this.model.addFood();
-       }
-       this.model.snake.dequeue();
-
-      
-        if(this.model.grid[newHead.row][newHead.col]===1){
-            this.model.gameOver=true;
-            console.log("game over");
-           return; 
+       } else {
+            this.model.snake.dequeue();
         }
-        // //check for food
-        // if(this.model.food.length===0){
-        //     this.model.addFood();
-        // }else{
-        //     //check for collision with food
-        //     if(this.model.food[0][0]===this.model.snake.peek()[0][0]&&this.model.food[0][1]===this.model.snake.peek()[0][1]){
-        //         this.model.food.pop();
-        //     }
-        // }
-
-        //remove tail if no food, else grow by one
-        // if(this.model.food.length===0){
-        //     this.model.snake.dequeue();
-        // }else{
-        //     this.model.growSnake();
-        // }
-        //add snake and food to model.grid 
-        // this.model.writeToCell(this.model.snake.peek()[0], this.model.snake.peek()[1], 1);
+      
 
         let newsnake = this.model.snake.front;
-        console.log("new snake.data", newsnake);
+        // console.log("new snake.data", newsnake);
         while(newsnake) {            
              
              this.model.writeToCell(newsnake.data[0][0], newsnake.data[0][1], 1);
-             console.log("snakebit:", newsnake.data[0][0], newsnake.data[0][1]);
+            //  console.log("snakebit:", newsnake.data[0][0], newsnake.data[0][1]);
              newsnake = newsnake.next;
         }
         // console.log("food: ",this.model.food[0][0],this.model.food[0][1]);

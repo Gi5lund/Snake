@@ -58,6 +58,16 @@ class Node{
           current = current.next;
      }
     }
+    iterateSnake(node){
+        let current=this.front;
+        while(current.next){
+           if(node[0][0]===current.data[0][0]&&node[0][1]===current.data[0][1]){
+            return true;
+              }
+            current=current.next;
+        }
+    
+    }
 }
 
 
@@ -80,7 +90,7 @@ export class GameModel{
         this.grid = this.createGrid();
         // console.log("grid: ",this.grid);
         this.initSnake();
-        console.log("snake: ",this.snake);
+        // console.log("snake: ",this.snake);
         this.addFood();
       
     }
@@ -126,7 +136,7 @@ export class GameModel{
     }
     writeToCell(row,col,value){ 
         if(row!==undefined&&col!==undefined&&value!==undefined){    
-         console.log("new writetocell",row,col, value)       
+        //  console.log("new writetocell",row,col, value)       
        this.grid[row][col]= value;     
     }else{
         console.log("row, col, value: ",row, col, value);
@@ -140,11 +150,11 @@ export class GameModel{
         let tail=this.snake.rear.data;
         this.snake.enqueue(tail);
     }
-    checkCollisionWithSelf(){ 
-        let head=this.snake.peek();
-        let current=this.snake.rear;
+    checkCollisionWithSelf(newhead){ 
+        let head=newhead
+        let current=this.snake.front;
         while(current.next){
-            if(current.data[0]===head[0]&&current.data[1]===head[1]){
+            if(current.data[0][0]===head[0][0]&&current.data[0][1]===head[0][1]){
                 
                 return true;
             }
