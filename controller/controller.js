@@ -65,7 +65,10 @@ export class Gamecontroller {
         return this.model.controls;
     }
     gameTick(){
+        
         //prepare next game tick
+        if(this.model.gameOver){
+            return;}
          setTimeout(this.gameTick.bind(this), 500);
         //remove snake from model.grid
         // console.log("remove snake");
@@ -150,5 +153,6 @@ export class Gamecontroller {
         this.model.writeToCell(this.model.food[0][0], this.model.food[0][1], 2);
         //update view
         this.view.updateView();
+   
     }
 }
