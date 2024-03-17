@@ -134,7 +134,7 @@ export class Gamecontroller {
             this.model.incrementScore();
             this.view.updateScore();
             this.view.updateCell(newHead.row, newHead.col);
-            this.model.growSnake();
+          
             this.model.addFood();
        } else {
             this.model.snake.dequeue();
